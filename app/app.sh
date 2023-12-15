@@ -1,24 +1,6 @@
-#!/bin/bash
-
-#########################################################
-# ODTP COMPONENT TEMPLATE
-#########################################################
-
-echo "STARTING ODTP COMPONENT"
-sleep 2
-
-## ODTP LOGGER in the background
-if [ -v ODTP_MONGO_SERVER ]; then
-    echo "STARTING LOGGING IN MONGO SERVER"
-    python3 /odtp/odtp-app/odtp-client/logger.py >> /odtp/odtp-logs/odtpLoggerDebugging.txt 2>&1 &
-else
-    echo "ODTP_MONGO_URL does not exist"
-fi
-
-
 ############################################################################################
 # START OF MANUAL CONFIGURATION. 
-# ADAPT THE TEMPLATE FROM HERE.
+# ADAPT THE TEMPLATE HERE.
 ############################################################################################
 
 #########################################################
@@ -69,46 +51,5 @@ python3 /odtp/odtp-workdir/tool-example/tool-example/app.py $HF_DATASET /odtp/od
 cp -r /odtp/odtp-workdir/output/* /odtp/odtp-output
 
 ############################################################################################
-# END OF MANUAL USER CONFIGURATION
+# END OF MANUAL USER APP
 ############################################################################################
-
-#########################################################
-# COMPRESS THE OUTPUT FOLDER GENERATED
-#########################################################
-
-#  Take output and export it
-cd /odtp/odtp-output
-zip -r /odtp/odtp-output/odtp-output.zip *
-
-#########################################################
-# ODTP SNAPSHOT CREATION 
-#########################################################
-
-# Take snapshot of workdir
-cd /odtp/
-zip -r /odtp/odtp-output/odtp-snapshot.zip odtp-workdir
-
-
-## Saving Snapshot in s3
-
-if [[ -v ODTP_S3_SERVER && -v ODTP_MONGO_SERVER ]]; then
-    echo "Uploading to ODTP_S3_SERVER"
-    python3 /odtp/odtp-app/odtp-client/s3uploader.py 2>&1 | tee /odtp/odtp-logs/odtpS3UploadedDebugging.txt  
-else
-    echo "ODTP_S3_SERVER does not exist"
-fi
-
-# ## Copying logs into output 
-# cp /odtp/odtp-logs/log.txt /odtp/odtp-output/log.txt
-
-# if [ -v ODTP_S3_SERVER ]; then
-#     cp /odtp/odtp-logs/odtpLoggerDebugging.txt /odtp/odtp-output/odtpLoggerDebugging.txt
-# else
-#     echo "ODTP_S3_SERVER doesn't exist. Not copying log files."
-# fi
-
-# if [[ -v ODTP_S3_SERVER && -v ODTP_MONGO_SERVER ]]; then
-#     cp /odtp/odtp-logs/odtpS3UploadedDebugging.txt /odtp/odtp-output/odtpS3UploadedDebugging.txt
-# else
-#     echo "ODTP_S3_SERVER doesn't exist. Not copying log files."
-# fi

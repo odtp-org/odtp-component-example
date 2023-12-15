@@ -3,13 +3,15 @@ This is a component used for testing ODTP components. It uses hugging face datas
 
 Please follow the next steps to adapt your tool. 
 
+The component app is contained in `app>app.sh`, while the `odtp` is in `odtp-client`. 
+
 ## Testing the component. 
 
 This component can be tested in isolation with the following instructions.
 
 1. Prepare manually a folder called volume containing the input files/folder needed:
 
-2. Create your `.env` file with the parameters. **If you do not have MONGODB and/or S3 activated omit this step, and just provide the scenario as environmental variable.**
+2. Create your `.env` file with the parameters. **If you do not have MONGODB and/or S3 activated omit don't declare the related variables**.
 
 ```
 HF_DATASET=A
@@ -46,5 +48,5 @@ mkdir odtp-output
 5. Run the following command. 
 
 ```
-docker run -it --rm -v odtp-input:/odtp/odtp-input -v odtp-output:/odtp/odtp-output --env-file .env odtp-component-example
+docker run -it --rm -v [Absolute Path to your input folder]:/odtp/odtp-input -v [Absolute Path to your output folder]:/odtp/odtp-output --env-file .env odtp-component-example
 ```

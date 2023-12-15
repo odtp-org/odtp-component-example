@@ -52,6 +52,7 @@ RUN pip install -r /tmp/requirements.txt
 RUN mkdir /odtp \
     /odtp/odtp-config \
     /odtp/odtp-app \
+    /odtp/odtp-client \
     /odtp/odtp-logs \ 
     /odtp/odtp-input \
     /odtp/odtp-workdir \
@@ -64,7 +65,9 @@ RUN mkdir /odtp/odtp-workdir/cache \
 # This copy all the information for running the ODTP component
 COPY odtp.yml /odtp/odtp-config/odtp.yml
 
+COPY ./odtp-client /odtp/odtp-client
+
 COPY ./app /odtp/odtp-app
 WORKDIR /odtp
 
-ENTRYPOINT ["bash", "/odtp/odtp-app/startup.sh"]
+ENTRYPOINT ["bash", "/odtp/odtp-client/startup.sh"]
