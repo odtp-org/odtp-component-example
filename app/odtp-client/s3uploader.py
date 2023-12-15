@@ -5,8 +5,8 @@ import logging
 import boto3
 import sys
 
-#sys.path.append('/odtp/odtp-app/odtp-client')
-#from logger import MongoManager
+sys.path.append('/odtp/odtp-app/odtp-client')
+from logger import MongoManager
 
 ### This method needs to create a new entry in snapshots MONGODB and upload the output.zip to s3. 
 ### At this moment the structure is not that important as to make things works together. 
@@ -142,6 +142,9 @@ class s3Manager:
 
 
 def main():
+    print("S3 UPLOADER ACTIVATED")
+    print("###########################")
+
     S3_SERVER = os.getenv("ODTP_S3_SERVER")
     BUCKET_NAME = os.getenv("ODTP_BUCKET_NAME")
     ACCESS_KEY = os.getenv("ODTP_ACCESS_KEY")
@@ -149,9 +152,9 @@ def main():
     STEP_ID = os.getenv("ODTP_STEP_ID")
     odtpS3 = s3Manager(S3_SERVER, BUCKET_NAME, ACCESS_KEY, SECRET_KEY)
 
-    # MONGO_URL = os.getenv("ODTP_MONGO_SERVER")
-    # db_name = "odtp"
-    # dbManager = MongoManager(MONGO_URL, db_name)
+    MONGO_URL = os.getenv("ODTP_MONGO_SERVER")
+    db_name = "odtp"
+    dbManager = MongoManager(MONGO_URL, db_name)
 
     USER_ID = os.getenv("ODTP_USER_ID")
     ODTP_OUTPUT_PATH = f"odtp/{STEP_ID}"
@@ -186,7 +189,7 @@ def main():
         }
     }
 
-    #odtp_output_id = dbManager.add_output(STEP_ID, output_data)
+    odtp_output_id = dbManager.add_output(STEP_ID, output_data)
     
     logging.info("ODTP OUTPUT UPLOADED")
 
@@ -217,8 +220,9 @@ def main():
         }
     }
 
-    #odtp_output_snapshot_id = dbManager.add_output(STEP_ID, output_data)
+    odtp_output_snapshot_id = dbManager.add_output(STEP_ID, output_data)
 
+    dbManager.close()
     logging.info("ODTP WORKDIR SNAPSHOT UPLOADED")
 
     # TODO: Upload individual files to S3 (Experimental)

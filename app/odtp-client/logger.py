@@ -88,7 +88,7 @@ class MongoManager:
 
         # Update digital twin with execution reference
         self.db.digitalTwins.update_one(
-            {"_id": step_id},  # Specify the document to update
+            {"_id": ObjectId(step_id)},  # Specify the document to update
             {"$set": {"field_name": output_id}}  # Use $set to replace the value of a field
         )
 

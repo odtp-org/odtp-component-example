@@ -67,5 +67,4 @@ COPY odtp.yml /odtp/odtp-config/odtp.yml
 COPY ./app /odtp/odtp-app
 WORKDIR /odtp
 
-#ENTRYPOINT ["bash", "/odtp/odtp-app/startup.sh"]
-ENTRYPOINT ["bash"]
+ENTRYPOINT ["bash", "/odtp/odtp-app/startup.sh"]
