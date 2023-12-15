@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
-RUN apt update
-RUN apt install python3 python3-pip -y
+RUN apt-get update
+RUN apt-get install python3 python3-pip -y
 
 ##################################################
 # Ubuntu setup
@@ -35,7 +35,9 @@ RUN pip install -r /tmp/odtp.requirements.txt
 # PLEASE INSTALL HERE ALL SYSTEM DEPENDENCIES RELATED TO YOUR TOOL
 #######################################################################
 
-
+# Installing dependecies from the app
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt
 
 
 ######################################################################
@@ -50,7 +52,8 @@ RUN pip install -r /tmp/odtp.requirements.txt
 RUN mkdir /odtp \
     /odtp/odtp-config \
     /odtp/odtp-app \
-    /odtp/odtp-volume \
+    /odtp/odtp-logs \ 
+    /odtp/odtp-input \
     /odtp/odtp-workdir \
     /odtp/odtp-output 
 
@@ -63,5 +66,6 @@ COPY odtp.yml /odtp/odtp-config/odtp.yml
 
 COPY ./app /odtp/odtp-app
 WORKDIR /odtp
-## How to share the config file as user? Maybe placing in volume? 
-ENTRYPOINT ["bash", "/odtp/odtp-app/startup.sh"]
+
+#ENTRYPOINT ["bash", "/odtp/odtp-app/startup.sh"]
+ENTRYPOINT ["bash"]

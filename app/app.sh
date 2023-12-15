@@ -7,11 +7,13 @@
 echo "STARTING ODTP COMPONENT"
 
 ## ODTP LOGGER in the background
-if [ -v MONGODB_CLIENT ]; then
-    python3 /odtp/odtp-app/logger.py >> /odtp/odtp-workdir/odtpLoggerDebugging.txt 2>&1 &
+if [ -v ODTP_MONGO_SERVER ]; then
+    echo "STARTING LOGGING IN MONGO SERVER"
+    python3 /odtp/odtp-app/odtp-client/logger.py >> /odtp/odtp-logs/odtpLoggerDebugging.txt 2>&1 &
 else
-    echo "MONGODB_CLIENT does not exist"
+    echo "ODTP_MONGO_URL does not exist"
 fi
+
 
 ############################################################################################
 # START OF MANUAL CONFIGURATION. 
@@ -24,9 +26,9 @@ fi
 
 # Actions
 # A1 - Clone github
-git clone https://github.com/eqasim-org/ile-de-france.git /odtp/odtp-workdir/scenario
-cd /odtp/odtp-workdir/scenario
-git checkout b8968c1
+git clone https://github.com/odtp-org/tool-example.git /odtp/odtp-workdir/tool-example
+cd /odtp/odtp-workdir/tool-example
+git checkout 79b2889
 
 #########################################################
 # IF TOOL REQUIRES A CONFIG FILE. GENERATE IT.
@@ -35,7 +37,11 @@ git checkout b8968c1
 
 # A2A - Prepare parameters & Config File
 # Read placeholders and create config file from Environment  
-python3 /odtp/odtp-app/parameters.py /odtp/odtp-app/config_templates/template.yml /odtp/odtp-workdir/config.yml
+#
+# Not needed as this tool does not requires a config file.
+# Variables will be provided when running
+# python3 /odtp/odtp-app/parameters.py /odtp/odtp-app/config_templates/template.yml /odtp/odtp-workdir/config.yml
+#
 
 #########################################################
 # IF TOOL REQUIRES A DATA FOLDER, CREATE SYMBOLIC LINK
@@ -43,60 +49,67 @@ python3 /odtp/odtp-app/parameters.py /odtp/odtp-app/config_templates/template.ym
 #########################################################
 
 # A2B - Prepare datafolder
-ln -s /odtp/odtp-volume/data /odtp/odtp-workdir/data
+#
+# NOT NEEDED
+# ln -s /odtp/odtp-input/... /odtp/odtp-workdir/...
+#
 
 #########################################################
 # COMMAND TO RUN THE TOOL
 #########################################################
 
 # A3 - Run the tool
-python3 -m tool
+# Here HF_DATASET IS DEFINED 
+# While the output is managed by ODTP and placed in /odtp/odtp-output/
+echo $HF_DATASET
+python3 /odtp/odtp-workdir/tool-example/tool-example/app.py $HF_DATASET /odtp/odtp-workdir/output
+
+# The selected output files generated should be placed in the output folder
+cp -r /odtp/odtp-workdir/output/* /odtp/odtp-output
+
+############################################################################################
+# END OF MANUAL USER CONFIGURATION
+############################################################################################
 
 #########################################################
 # COMPRESS THE OUTPUT FOLDER GENERATED
 #########################################################
 
 #  Take output and export it
-zip -r output.zip /odtp/odtp-workdir/output
-
-############################################################################################
-# END OF MANUAL CONFIGURATION
-############################################################################################
+cd /odtp/odtp-output
+zip -r /odtp/odtp-output/odtp-output.zip *
 
 #########################################################
 # ODTP SNAPSHOT CREATION 
 #########################################################
 
 # Take snapshot of workdir
-zip -r workdir.zip /odtp/odtp-workdir
+cd /odtp/
+zip -r /odtp/odtp-output/odtp-snapshot.zip odtp-workdir
 
-## Placing output i back in volume just for debugging
-cp output.zip /odtp/odtp-volume/output.zip
-cp workdir.zip /odtp/odtp-volume/workdir.zip
 
-## Save Snapshot in s3
-mv output.zip /odtp/odtp-output/output.zip
-mv workdir.zip /odtp/odtp-output/workdir.zip
+## Saving Snapshot in s3
 
-if [[ -v S3_SERVER && -v MONGODB_CLIENT ]]; then
-    echo "Uploading to S3_SERVER"
-    python3 /odtp/odtp-app/s3uploader.py 2>&1 | tee /odtp/odtp-workdir/odtpS3UploadedDebugging.txt  
+if [[ -v ODTP_S3_SERVER && -v ODTP_MONGO_SERVER ]]; then
+    echo "Uploading to ODTP_S3_SERVER"
+    python3 /odtp/odtp-app/odtp-client/s3uploader.py 2>&1 | tee /odtp/odtp-logs/odtpS3UploadedDebugging.txt  
 else
-    echo "S3_SERVER does not exist"
+    echo "ODTP_S3_SERVER does not exist"
 fi
 
-## Copying logs
-cp /odtp/odtp-workdir/log.txt /odtp/odtp-volume/log.txt
+echo "--- ODTP COMPONENT ENDING ---" >> /odtp/odtp-logs/log.txt
 
+# ## Copying logs into output 
+# cp /odtp/odtp-logs/log.txt /odtp/odtp-output/log.txt
 
-if [ -v MONGODB_CLIENT ]; then
-    cp /odtp/odtp-workdir/odtpLoggerDebugging.txt /odtp/odtp-volume/odtpLoggerDebugging.txt
-else
-    echo "MONGODB_CLIENT doesn't exist. Not copying log files."
-fi
+# if [ -v ODTP_S3_SERVER ]; then
+#     cp /odtp/odtp-logs/odtpLoggerDebugging.txt /odtp/odtp-output/odtpLoggerDebugging.txt
+# else
+#     echo "ODTP_S3_SERVER doesn't exist. Not copying log files."
+# fi
 
-if [[ -v S3_SERVER && -v MONGODB_CLIENT ]]; then
-    cp /odtp/odtp-workdir/odtpS3UploadedDebugging.txt /odtp/odtp-volume/odtpS3UploadedDebugging.txt
-else
-    echo "S3_SERVER doesn't exist. Not copying log files."
-fi
+# if [[ -v ODTP_S3_SERVER && -v ODTP_MONGO_SERVER ]]; then
+#     cp /odtp/odtp-logs/odtpS3UploadedDebugging.txt /odtp/odtp-output/odtpS3UploadedDebugging.txt
+# else
+#     echo "ODTP_S3_SERVER doesn't exist. Not copying log files."
+# fi
