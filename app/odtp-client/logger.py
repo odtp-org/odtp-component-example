@@ -98,8 +98,15 @@ class MongoManager:
     def append_log(self, step_id, log_data):
         steps_collection = self.db["steps"]
         steps_collection.update_one(
-            {"_id": step_id},
+            {"_id": ObjectId(step_id)},
             {"$push": {"logs": log_data}}
+        )
+    
+    def append_logs(self, step_id, log_data_list):
+        steps_collection = self.db["steps"]
+        steps_collection.update_one(
+            {"_id": ObjectId(step_id)},
+            {"$push": {"logs": {"$each": log_data_list}}}
         )
 
     def add_result(self, digital_twin_id, execution_id, result_data):
@@ -248,27 +255,31 @@ def main(delay=2):
     # Active until it finds "--- ODTP COMPONENT ENDING ---"
     ending_detected = False
     while ending_detected == False:
-        print("hello")
         logs = log_reader.read_from_last_position()
         
+        newLogList = []
         for log in logs:
             newLogEntry= {
             "timestamp": datetime.utcnow(),
             "type": "INFO",
             "logstring": log}
 
-            dbManager = MongoManager(MONGO_URL, db_name)
-            _ = dbManager.append_log(step_id, newLogEntry)
-            dbManager.close()
+            newLogList.append(newLogEntry)
 
-            time.sleep(0.2)
-            # TODO: Improve this
-            if log == "--- ODTP COMPONENT ENDING ---":
-                ending_detected = True
+
+        dbManager = MongoManager(MONGO_URL, db_name)
+        _ = dbManager.append_logs(step_id, newLogList)
+        dbManager.close()
+
+        time.sleep(0.2)
+
+        # TODO: Improve this
+        if log == "--- ODTP COMPONENT ENDING ---":
+            ending_detected = True
 
         #time.sleep(delay)
 
 
 if __name__ == '__main__':
-    main(delay=2)
+    main(delay=0.5)
 

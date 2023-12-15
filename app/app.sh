@@ -5,6 +5,7 @@
 #########################################################
 
 echo "STARTING ODTP COMPONENT"
+sleep 2
 
 ## ODTP LOGGER in the background
 if [ -v ODTP_MONGO_SERVER ]; then
@@ -96,8 +97,6 @@ if [[ -v ODTP_S3_SERVER && -v ODTP_MONGO_SERVER ]]; then
 else
     echo "ODTP_S3_SERVER does not exist"
 fi
-
-echo "--- ODTP COMPONENT ENDING ---" >> /odtp/odtp-logs/log.txt
 
 # ## Copying logs into output 
 # cp /odtp/odtp-logs/log.txt /odtp/odtp-output/log.txt

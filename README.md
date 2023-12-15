@@ -37,8 +37,8 @@ docker build -t odtp-component-example .
 4. Create an execution folder outside this repository and place the .env inside
 
 ```
-mkdir odtp-component-template-execution
-cd odtp-component-template-execution
+mkdir odtp-component-example-execution
+cd odtp-component-example-execution
 mkdir odtp-input
 mkdir odtp-output
 ```
