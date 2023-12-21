@@ -31,9 +31,9 @@ bash /odtp/odtp-app/app.sh
 #########################################################
 
 #  Take output and export it
-cd /odtp/
-zip -r odtp-output.zip odtp-output
-mv odtp-output.zip odtp-output/odtp-output.zip
+cd /odtp/odtp-output
+zip -r ../odtp-output.zip .
+mv ../odtp-output.zip .
 
 #########################################################
 # ODTP SNAPSHOT CREATION 
