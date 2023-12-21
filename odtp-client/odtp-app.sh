@@ -32,7 +32,7 @@ bash /odtp/odtp-app/app.sh
 
 #  Take output and export it
 cd /odtp/odtp-output
-zip -r ../odtp-output.zip .
+zip -j ../odtp-output.zip .
 mv ../odtp-output.zip .
 
 #########################################################
