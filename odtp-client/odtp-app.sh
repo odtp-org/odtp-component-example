@@ -31,18 +31,18 @@ bash /odtp/odtp-app/app.sh
 #########################################################
 
 #  Take output and export it
-cd /odtp
-zip -r odtp-output.zip odtp-output
-mv odtp-output.zip odtp-output
+cd /odtp/odtp-output
+zip -r ../odtp-output.zip *
+mv ../odtp-output.zip odtp-output/odtp-output.zip
 
 #########################################################
 # ODTP SNAPSHOT CREATION 
 #########################################################
 
 # Take snapshot of workdir
-cd /odtp/
-zip -r odtp-snapshot.zip odtp-workdir
-mv odtp-snapshot.zip odtp-output
+cd /odtp/odtp-workdir
+zip -r ../odtp-snapshot.zip *
+mv ../odtp-snapshot.zip odtp-output/odtp-snapshot.zip
 
 
 ## Saving Snapshot in s3
