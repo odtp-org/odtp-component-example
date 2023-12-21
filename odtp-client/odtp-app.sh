@@ -12,7 +12,7 @@ if [ -v ODTP_MONGO_SERVER ]; then
     echo "STARTING LOGGING IN MONGO SERVER"
     python3 /odtp/odtp-client/logger.py >> /odtp/odtp-logs/odtpLoggerDebugging.txt 2>&1 &
 else
-    echo "ODTP_MONGO_URL does not exist"
+    echo "ODTP_MONGO_SERVER does not exist"
 fi
 
 
@@ -32,7 +32,7 @@ bash /odtp/odtp-app/app.sh
 
 #  Take output and export it
 cd /odtp/odtp-output
-zip -r /odtp/odtp-output/odtp-output.zip /odtp/odtp-output
+zip -r /odtp/odtp-output/odtp-output.zip /odtp/odtp-output/*
 
 #########################################################
 # ODTP SNAPSHOT CREATION 
