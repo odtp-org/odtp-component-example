@@ -1,11 +1,22 @@
 # odtp-component-example
-This is a component used to test ODTP components. It uses huggingface datasets, which you can download and save as `.csv`.
+This is a component used to test ODTP components. It uses Hugging face datasets, which you can download and save as `.csv.`
 
-Please follow the next steps to adapt your tool. 
+| Tool Info | Links |
+| --- | --- |
+| Original | [https://github.com/odtp-org/tool-example](https://github.com/odtp-org/tool-example) |
+| Current Tool Version | [88f953f0aabbfb08189bdc3212aa1c209fbedb2d](https://github.com/odtp-org/tool-example/commit/88f953f0aabbfb08189bdc3212aa1c209fbedb2d) |
 
-The component app is contained in `app>app.sh`, while the `odtp` is in `odtp-client`. 
+## ODTP command 
 
-## Testing the component. 
+```
+odtp new odtp-component-entry \
+--name odtp-example \
+--component-version 0.1.0 \
+--repository https://github.com/odtp-org/odtp-component-example
+``` 
+
+## Tutorial
+### Testing the component. 
 
 This component can be tested in isolation with the following instructions.
 
