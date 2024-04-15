@@ -12,7 +12,8 @@ This is a component used to test ODTP components. It uses Hugging face datasets,
 odtp new odtp-component-entry \
 --name odtp-example \
 --component-version 0.1.0 \
---repository https://github.com/odtp-org/odtp-component-example
+--repository https://github.com/odtp-org/odtp-component-example \
+--commit a30858fe0997c839130f0e31583232caa143c79c
 ``` 
 
 ## Tutorial
