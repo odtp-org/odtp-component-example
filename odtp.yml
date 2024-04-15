@@ -1,36 +1,62 @@
-# This file should contain basic component information such as 
+# This file should contain basic component information for your component.
+component-name: odtp-eqasim-matsim
+component-author: Carlos Vivar Rios
+component-version: 0.1.0
+component-repository: https://github.com/odtp-org/odtp-component-example
+component-license: AGPL-3.0
+component-type: ephemeral
+component-description: ODTP component to download a HF_DATASET
+tags:
+  - huggingface
+  - testing
+  - example
 
-- name: Component Example
-- component_version: 0.0.1
-- repository: https://github.com/odtp-org/tool-example
-- commit:
-- author: SDSC
-- original_author: SDSC
-- description: Tool used for testing of odtp component
-- tags: ["example", "tutorial"]
-- arguments:
-  - HF_DATASET: string
-- inputs:
-  - data: /data
-- devices:
-  - gpus: False
-- inputSchema: ...
-- outputSchema: ...
-- env:
-  - HF_DATASET: rotten_tomatoes
-- odtp.ports:
-  - api: 7100
-  - logger: 7101
-- odtp.env:
-  - ODTP_MONGO_SERVER
-  - ODTP_S3_SERVER
-  - ODTP_BUCKET_NAME
-  - ODTP_ACCESS_KEY
-  - ODTP_SECRET_KEY
-  - ODTP_USER_ID
-  - ODTP_DIGITAL_TWIN
-  - ODTP_EXCUTION
-  - ODTP_STEP
-  - ODTP_COMPONENT
-  - ODTP_COMPONENT_VERSION
-  - ODTP_SAVE_SNAPSHOT
+# Information about the tools
+tools:
+  - tool-name: odtp-org/tool-example
+    tool-author: Carlos Vivar Rios
+    tool-version: 88f953f0aabbfb08189bdc3212aa1c209fbedb2d
+    tool-repository: 	https://github.com/odtp-org/tool-example
+    tool-license: AGPL-3.0
+
+# If your tool require some secrets token to be passed as ENV to the component
+# This won't be traced in MongoDB
+secrets: null
+
+# If the tool requires some building arguments such as Matlab license
+build-args: null
+
+# If applicable, ports exposed by the component
+# Include Name, Description, and Port Value for each port
+ports: null
+
+# If applicable, parameters exposed by the component
+# Datatype can be str, int, float, or bool.
+parameters:
+  - name: HF_DATASET
+    default-value: rooten_tomatoes
+    datatype: string
+    description: Hugging face dataset key
+    options:
+      - rooten_tomatoes
+    allow-custom-value: true
+
+# If applicable, data-input list required by the component
+data-inputs: null
+
+# If applicable, data-output list produced by the component
+data-output:
+  - name: dataset
+    type: csv
+    path: .
+    description: Output from dataset
+
+
+# If applicable, path to schemas to perform semantic validation.
+# Still under development. Ignore.
+schema-input: null
+schema-output: null
+
+# If applicable, define devices needed such as GPU.
+devices:
+  gpu: false
