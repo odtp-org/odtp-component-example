@@ -52,6 +52,8 @@ docker run -it --rm -v [Absolute Path to your input folder]:/odtp/odtp-input -v 
 
 ## Changelog
 
+- v0.1.1: Change Dockerfile setup: use fixed versions for python and ubuntu
+
 - v0.1.0: Basic functionality
 
 ## Development
