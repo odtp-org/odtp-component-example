@@ -1,7 +1,7 @@
 # This file should contain basic component information for your component.
 component-name: odtp-eqasim-matsim
 component-author: Carlos Vivar Rios
-component-version: 0.1.0
+component-version: 0.1.2
 component-repository: https://github.com/odtp-org/odtp-component-example
 component-license: AGPL-3.0
 component-type: ephemeral
@@ -46,9 +46,17 @@ data-inputs: null
 
 # If applicable, data-output list produced by the component
 data-output:
-  - name: dataset
+  - name: test.csv
     type: csv
-    path: .
+    path: {{HF_DATASET}}/test.csv
+    description: Output from dataset
+  - name: train.csv
+    type: csv
+    path: {{HF_DATASET}}/train.csv
+    description: Output from dataset
+  - name: validation.csv
+    type: csv
+    path: {{HF_DATASET}}/validation.csv
     description: Output from dataset
 
 

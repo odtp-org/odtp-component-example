@@ -26,7 +26,7 @@ This component can be tested in isolation with the following instructions.
 2. Create your `.env` file with the parameters. 
 
 ```
-HF_DATASET=A
+HF_DATASET=rooten_tomatoes
 ```
 
 3. Build the dockerfile.
@@ -51,6 +51,8 @@ docker run -it --rm -v [Absolute Path to your input folder]:/odtp/odtp-input -v 
 ```
 
 ## Changelog
+
+- v0.1.2: Update `odtp-component-client` to v0.1.0
 
 - v0.1.1: Change Dockerfile setup: use fixed versions for python and ubuntu
 
