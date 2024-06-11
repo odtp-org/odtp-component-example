@@ -34,11 +34,11 @@ ports: null
 # Datatype can be str, int, float, or bool.
 parameters:
   - name: HF_DATASET
-    default-value: rooten_tomatoes
+    default-value: rotten_tomatoes
     datatype: string
     description: Hugging face dataset key
     options:
-      - rooten_tomatoes
+      - rotten_tomatoes
     allow-custom-value: true
 
 # If applicable, data-input list required by the component
