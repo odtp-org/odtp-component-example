@@ -2,15 +2,21 @@
 # START OF MANUAL CONFIGURATION. 
 # ADAPT THE TEMPLATE HERE.
 ############################################################################################
-
+source "/odtp/odtp-component-client/src/shell/log.sh"
+source "/odtp/odtp-component-client/src/shell/traceback.sh"
 #########################################################
 # GITHUB CLONING OF REPO
 #########################################################
 
 # Actions
 # A1 - Clone github
+odtp::print_info "Clone the  tool repo 'https://github.com/odtp-org/tool-example.git'"
 git clone https://github.com/odtp-org/tool-example.git /odtp/odtp-workdir/tool-example
+
+odtp::print_info "Move into the working directory"
 cd /odtp/odtp-workdir/tool-example
+
+odtp::print_info "Checkout commit '79b2889'"
 git checkout 79b2889
 
 #########################################################
@@ -44,10 +50,11 @@ git checkout 79b2889
 # A3 - Run the tool
 # Here HF_DATASET IS DEFINED 
 # While the output is managed by ODTP and placed in /odtp/odtp-output/
-echo $HF_DATASET
+odtp::print_info "download $HF_DATASET into working directory"
 python3 /odtp/odtp-workdir/tool-example/tool-example/app.py $HF_DATASET /odtp/odtp-workdir/output
 
 # The selected output files generated should be placed in the output folder
+odtp::print_info "copy output from working directory into output folder"
 cp -r /odtp/odtp-workdir/output/* /odtp/odtp-output
 
 ############################################################################################
