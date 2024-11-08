@@ -11,7 +11,7 @@ This is a component used to test ODTP components. It uses Hugging face datasets,
 ```
 odtp new odtp-component-entry \
 --name odtp-example \
---component-version v0.1.5 \
+--component-version v0.1.6 \
 --repository https://github.com/odtp-org/odtp-component-example
 ``` 
 
@@ -56,6 +56,9 @@ docker run -it --rm \
 
 ## Changelog
 
+- v0.1.6
+    - Corrected `odtp.yml` to ensure parsing
+    - Updated Dockerfile with fix for windows-based buildings
 
 - v0.1.5
     - Updated ODTP Client
