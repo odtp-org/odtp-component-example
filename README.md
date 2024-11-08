@@ -11,9 +11,8 @@ This is a component used to test ODTP components. It uses Hugging face datasets,
 ```
 odtp new odtp-component-entry \
 --name odtp-example \
---component-version 0.1.0 \
---repository https://github.com/odtp-org/odtp-component-example \
---commit a30858fe0997c839130f0e31583232caa143c79c
+--component-version v0.1.5 \
+--repository https://github.com/odtp-org/odtp-component-example
 ``` 
 
 ## Tutorial
@@ -42,15 +41,30 @@ mkdir odtp-component-example-execution
 cd odtp-component-example-execution
 mkdir odtp-input
 mkdir odtp-output
+mkdir odtp-logs
 ```
 
 5. Run the following command. 
 
 ```
-docker run -it --rm -v [Absolute Path to your input folder]:/odtp/odtp-input -v [Absolute Path to your output folder]:/odtp/odtp-output --env-file .env odtp-component-example
+docker run -it --rm \
+-v $(pwd)/odtp-input:/odtp/odtp-input \
+-v $(pwd)/odtp-output:/odtp/odtp-output \
+-v $(pwd)/odtp-logs:/odtp/odtp-logs \
+--env-file .env odtp-component-example
 ```
 
 ## Changelog
+
+- v0.1.5
+    - Updated ODTP Client
+    - Including workflows
+
+- v0.1.4
+
+- v0.1.3
+
+- v0.1.2
 
 - v0.1.1: Change Dockerfile setup: use fixed versions for python and ubuntu
 
