@@ -25,7 +25,7 @@ This component can be tested in isolation with the following instructions.
 2. Create your `.env` file with the parameters. 
 
 ```
-HF_DATASET=A
+HF_DATASET=rooten_tomatoes
 ```
 
 3. Build the dockerfile.
@@ -56,6 +56,7 @@ docker run -it --rm \
 
 ## Changelog
 
+<<<<<<< HEAD
 - v0.1.5
     - Updated ODTP Client
     - Including workflows
@@ -65,6 +66,9 @@ docker run -it --rm \
 - v0.1.3
 
 - v0.1.2
+=======
+- v0.1.2: Update `odtp-component-client` to v0.1.0
+>>>>>>> c7b9fb84ee5230dcdf35b6762a877dffc530b801
 
 - v0.1.1: Change Dockerfile setup: use fixed versions for python and ubuntu
 

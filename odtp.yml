@@ -34,11 +34,11 @@ ports: null
 # Datatype can be str, int, float, or bool.
 parameters:
   - name: HF_DATASET
-    default-value: rooten_tomatoes
+    default-value: rotten_tomatoes
     datatype: string
     description: Hugging face dataset key
     options:
-      - rooten_tomatoes
+      - rotten_tomatoes
     allow-custom-value: true
 
 # If applicable, data-input list required by the component
@@ -46,9 +46,17 @@ data-inputs: null
 
 # If applicable, data-output list produced by the component
 data-output:
-  - name: dataset
+  - name: test.csv
     type: csv
-    path: .
+    path: {{HF_DATASET}}/test.csv
+    description: Output from dataset
+  - name: train.csv
+    type: csv
+    path: {{HF_DATASET}}/train.csv
+    description: Output from dataset
+  - name: validation.csv
+    type: csv
+    path: {{HF_DATASET}}/validation.csv
     description: Output from dataset
 
 
