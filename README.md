@@ -56,7 +56,7 @@ docker run -it --rm \
 
 ## Changelog
 
-<<<<<<< HEAD
+
 - v0.1.5
     - Updated ODTP Client
     - Including workflows
@@ -65,10 +65,7 @@ docker run -it --rm \
 
 - v0.1.3
 
-- v0.1.2
-=======
 - v0.1.2: Update `odtp-component-client` to v0.1.0
->>>>>>> c7b9fb84ee5230dcdf35b6762a877dffc530b801
 
 - v0.1.1: Change Dockerfile setup: use fixed versions for python and ubuntu
 
