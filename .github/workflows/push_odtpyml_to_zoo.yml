@@ -2,10 +2,14 @@ name: Push ODTP YAML to Zoo
 
 on:
   workflow_dispatch:
-  
+
 jobs:
   fork_and_pr:
     runs-on: ubuntu-latest
+
+    env:
+      UPSTREAM_REPO: "original-owner/original-repo"  # Define the full upstream repo path
+      UPSTREAM_REPO_NAME: "original-repo"  # Define only the repo name for use in expressions
 
     steps:
     - name: Fork Repository if Not Already Forked
@@ -14,7 +18,7 @@ jobs:
       run: |
         # Call GitHub API to fork the repo
         curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
-          https://api.github.com/repos/${{ vars.UPSTREAM_REPO }}/forks || echo "Fork already exists."
+          https://api.github.com/repos/${{ env.UPSTREAM_REPO }}/forks || echo "Fork already exists."
 
     - name: Checkout Source Repository
       uses: actions/checkout@v3
@@ -38,7 +42,7 @@ jobs:
     - name: Checkout Forked Repository Components Branch
       uses: actions/checkout@v3
       with:
-        repository: ${{ github.repository_owner }}/${{ vars.UPSTREAM_REPO##*/ }}
+        repository: ${{ github.repository_owner }}/{{ env.UPSTREAM_REPO_NAME }}
         token: ${{ secrets.GITHUB_TOKEN }}
         ref: components  # Checking out the components branch of the fork
         path: forked-repo
@@ -46,10 +50,9 @@ jobs:
     - name: Set Upstream and Fetch Latest Changes from Original Repo
       run: |
         cd forked-repo
-        git remote add upstream https://github.com/${{ vars.UPSTREAM_REPO }}.git
+        git remote add upstream https://github.com/${{ env.UPSTREAM_REPO }}.git
         git fetch upstream components
         git merge upstream/components
-      # The above steps ensure that your fork's `components` branch is in sync with the latest changes from the original repo's `components` branch
 
     - name: Copy Renamed File to Components Folder
       run: |
@@ -69,7 +72,7 @@ jobs:
       uses: peter-evans/create-pull-request@v5
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        repository: ${{ vars.UPSTREAM_REPO }}
+        repository: ${{ env.UPSTREAM_REPO }}
         head: "${{ github.repository_owner }}:components"  # Format for fork's branch
         base: components
         title: "Add component file: ${component_name}_${component_version}.yml"
