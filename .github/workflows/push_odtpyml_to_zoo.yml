@@ -62,12 +62,6 @@ jobs:
         git fetch upstream ${{ env.COMPONENTS_BRANCH }}
         git merge upstream/${{ env.COMPONENTS_BRANCH }}
 
-    - name: Copy Renamed File to Components Folder
-      run: |
-        mkdir -p forked-repo/${{ env.TARGET_FOLDER }}
-        cp "${component_name}_${component_version}.yml" forked-repo/${{ env.TARGET_FOLDER }}/"${component_name}_${component_version}.yml"
-        ls -R forked-repo/${{ env.TARGET_FOLDER }}  # List all files 
-
     - name: Checkout Forked Repository Components Branch
       uses: actions/checkout@v3
       with:
@@ -75,6 +69,12 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         ref: ${{ env.COMPONENTS_BRANCH }}
         path: forked-repo
+
+
+    - name: Copy Renamed File to Components Folder
+      run: |
+        mkdir -p forked-repo/${{ env.TARGET_FOLDER }}
+        cp "${component_name}_${component_version}.yml" forked-repo/${{ env.TARGET_FOLDER }}/"${component_name}_${component_version}.yml"
 
     - name: Verify File Structure
       run: |
