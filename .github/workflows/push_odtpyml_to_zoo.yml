@@ -5,11 +5,11 @@ on:
 
 env:
   UPSTREAM_REPO: "odtp-org/odtp-zoo"          # Original repo to fork from
-  FORKED_REPO: "${{ github.repository_owner }}/odtp-zoo"  # Forked repo under your username
+  FORKED_REPO: "caviri/odtp-zoo"  # Forked repo under your username
   COMPONENTS_BRANCH: "components"             # Branch name for components
   SOURCE_FILE: "odtp.yml"                     # The file to rename and copy
   TARGET_FOLDER: "components"                 # Target folder in fork
-  GITHUB_USERNAME: "${{ github.repository_owner }}"  # Your GitHub username
+  GITHUB_USERNAME: caviri #"${{ github.repository_owner }}"  # Your GitHub username
 
 jobs:
   fork_and_pr:
