@@ -1,0 +1,69 @@
+name: Push ODTP YAML to Zoo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fork_and_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Fork Repository if Not Already Forked
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Call GitHub API to fork the repo
+        curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
+          https://api.github.com/repos/${{ vars.UPSTREAM_REPO }}/forks || echo "Fork already exists."
+
+    - name: Checkout Source Repository
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract Component Name and Version
+      id: extract_values
+      run: |
+        component_name=$(yq e '.component-name' odtp.yml)
+        component_version=$(yq e '.component-version' odtp.yml)
+        echo "Component Name: $component_name"
+        echo "Component Version: $component_version"
+        echo "component_name=$component_name" >> $GITHUB_ENV
+        echo "component_version=$component_version" >> $GITHUB_ENV
+      # Requires the yq command-line tool to parse YAML; install if not available
+
+    - name: Rename File
+      run: |
+        mv odtp.yml "${component_name}_${component_version}.yml"
+
+    - name: Checkout Forked Repository Components Branch
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ github.repository_owner }}/${{ vars.UPSTREAM_REPO##*/ }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        ref: components  # Checking out the components branch of the fork
+        path: forked-repo
+
+    - name: Copy Renamed File to Components Folder
+      run: |
+        mkdir -p forked-repo/components
+        cp "${component_name}_${component_version}.yml" forked-repo/components/
+
+    - name: Commit and Push Changes to Fork
+      run: |
+        cd forked-repo
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add components/"${component_name}_${component_version}.yml"
+        git commit -m "Add component file: ${component_name}_${component_version}.yml"
+        git push origin components
+
+    - name: Create Pull Request to Upstream
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        repository: ${{ vars.UPSTREAM_REPO }}
+        head: "${{ github.repository_owner }}:components"  # Format for fork's branch
+        base: components
+        title: "Add component file: ${component_name}_${component_version}.yml"
+        body: "This PR adds the component file for ${component_name} version ${component_version}."
