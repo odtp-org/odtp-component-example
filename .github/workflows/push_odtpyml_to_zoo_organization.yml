@@ -18,12 +18,12 @@ jobs:
 
     steps:
     - name: Fork Repository if Not Already Forked
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-            # Fork the upstream repository if it doesn't exist in the user's account
-            curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
-              https://api.github.com/repos/${{ env.UPSTREAM_REPO }}/forks || echo "Fork already exists."
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Fork the upstream repository if it doesn't exist in the user's account
+        curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
+          https://api.github.com/repos/${{ env.UPSTREAM_REPO }}/forks || echo "Fork already exists."
 
     - name: Checkout Source Repository
       uses: actions/checkout@v3
