@@ -63,6 +63,20 @@ jobs:
         mkdir -p forked-repo/${{ env.TARGET_FOLDER }}
         cp "${component_name}_${component_version}.yml" forked-repo/${{ env.TARGET_FOLDER }}/
 
+    - name: Checkout Forked Repository Components Branch
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ env.FORKED_REPO }}  # Your forked repository (e.g., your-username/odtp-zoo)
+        token: ${{ secrets.GITHUB_TOKEN }}
+        ref: ${{ env.COMPONENTS_BRANCH }}
+        path: forked-repo
+
+    - name: Set Remote to Fork
+      run: |
+        cd forked-repo
+        git remote set-url origin https://github.com/${{ env.FORKED_REPO }}.git
+        git remote -v  # List remotes for confirmation
+
     - name: Commit and Push Changes to Fork
       run: |
         cd forked-repo
