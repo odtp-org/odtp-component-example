@@ -71,6 +71,11 @@ jobs:
         ref: ${{ env.COMPONENTS_BRANCH }}
         path: forked-repo
 
+    - name: Verify File Structure
+      run: |
+        ls -R forked-repo  # List all files in forked-repo to verify the copied file
+        ls -R forked-repo/${{ env.TARGET_FOLDER }}  # List files in the target folder for confirmation
+
     - name: Set Remote to Fork
       run: |
         cd forked-repo
