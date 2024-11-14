@@ -43,6 +43,10 @@ jobs:
       run: |
         cp ${{ env.SOURCE_FILE }} "${component_name}_${component_version}.yml"
 
+    - name: Verify File Structure
+      run: |
+        ls -R .  # List all files 
+
     - name: Checkout Forked Repository Components Branch
       uses: actions/checkout@v3
       with:
