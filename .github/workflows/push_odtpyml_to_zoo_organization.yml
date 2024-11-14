@@ -1,4 +1,4 @@
-name: Push ODTP YAML to Zoo Fork
+name: Push ODTP YAML to Zoo within the Organization
 
 on:
   workflow_dispatch:
