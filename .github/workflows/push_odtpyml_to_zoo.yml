@@ -2,7 +2,7 @@ name: Push ODTP YAML to Zoo
 
 on:
   workflow_dispatch:
-
+  
 jobs:
   fork_and_pr:
     runs-on: ubuntu-latest
@@ -30,7 +30,6 @@ jobs:
         echo "Component Version: $component_version"
         echo "component_name=$component_name" >> $GITHUB_ENV
         echo "component_version=$component_version" >> $GITHUB_ENV
-      # Requires the yq command-line tool to parse YAML; install if not available
 
     - name: Rename File
       run: |
@@ -43,6 +42,14 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         ref: components  # Checking out the components branch of the fork
         path: forked-repo
+
+    - name: Set Upstream and Fetch Latest Changes from Original Repo
+      run: |
+        cd forked-repo
+        git remote add upstream https://github.com/${{ vars.UPSTREAM_REPO }}.git
+        git fetch upstream components
+        git merge upstream/components
+      # The above steps ensure that your fork's `components` branch is in sync with the latest changes from the original repo's `components` branch
 
     - name: Copy Renamed File to Components Folder
       run: |
