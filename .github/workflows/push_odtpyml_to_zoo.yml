@@ -45,12 +45,12 @@ jobs:
         repository: ${{ github.repository_owner }}/odtp-zoo  # Use the full path directly
         token: ${{ secrets.GITHUB_TOKEN }}
         ref: components  # Checking out the components branch of the fork
-        path: forked-repo
+        path: forked-repoW
 
     - name: Set Upstream and Fetch Latest Changes from Original Repo
       run: |
         cd forked-repo
-        git remote add upstream https://github.com/${{ env.UPSTREAM_REPO }}.git
+        git remote add upstream https://github.com/odtp-org/odtp-zoo.git
         git fetch upstream components
         git merge upstream/components
 
@@ -72,7 +72,7 @@ jobs:
       uses: peter-evans/create-pull-request@v5
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        repository: ${{ env.UPSTREAM_REPO }}
+        repository: odtp-org/odtp-zoo
         head: "${{ github.repository_owner }}:components"  # Format for fork's branch
         base: components
         title: "Add component file: ${component_name}_${component_version}.yml"
