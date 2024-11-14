@@ -5,7 +5,7 @@ on:
 
 env:
   UPSTREAM_REPO: "odtp-org/odtp-zoo"          # Original repo to fork from
-  FORKED_REPO: odtp-org/odtp-zoo"  # Forked repo under your username
+  FORKED_REPO: "odtp-org/odtp-zoo"  # Forked repo under your username
   COMPONENTS_BRANCH: "components"             # Branch name for components
   SOURCE_FILE: "odtp.yml"                     # The file to rename and copy
   TARGET_FOLDER: "components"                 # Target folder in fork
