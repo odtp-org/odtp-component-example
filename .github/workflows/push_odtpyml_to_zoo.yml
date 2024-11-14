@@ -3,20 +3,24 @@ name: Push ODTP YAML to Zoo
 on:
   workflow_dispatch:
 
+env:
+  UPSTREAM_REPO: "odtp-org/odtp-zoo"          # Original repo to fork from
+  FORKED_REPO: "${{ github.repository_owner }}/odtp-zoo"  # Forked repo under your username
+  COMPONENTS_BRANCH: "components"             # Branch name for components
+  SOURCE_FILE: "odtp.yml"                     # The file to rename and copy
+  TARGET_FOLDER: "components"                 # Target folder in fork
+  GITHUB_USERNAME: "${{ github.repository_owner }}"  # Your GitHub username
+
 jobs:
   fork_and_pr:
     runs-on: ubuntu-latest
-
-    env:
-      UPSTREAM_REPO: "original-owner/original-repo"  # Define the full upstream repo path
-      UPSTREAM_REPO_NAME: "original-repo"  # Define only the repo name for use in expressions
 
     steps:
     - name: Fork Repository if Not Already Forked
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # Call GitHub API to fork the repo
+        # Fork the upstream repository if it doesn't exist in the user's account
         curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
           https://api.github.com/repos/${{ env.UPSTREAM_REPO }}/forks || echo "Fork already exists."
 
@@ -28,8 +32,8 @@ jobs:
     - name: Extract Component Name and Version
       id: extract_values
       run: |
-        component_name=$(yq e '.component-name' odtp.yml)
-        component_version=$(yq e '.component-version' odtp.yml)
+        component_name=$(yq e '.component-name' ${{ env.SOURCE_FILE }})
+        component_version=$(yq e '.component-version' ${{ env.SOURCE_FILE }})
         echo "Component Name: $component_name"
         echo "Component Version: $component_version"
         echo "component_name=$component_name" >> $GITHUB_ENV
@@ -37,43 +41,43 @@ jobs:
 
     - name: Rename File
       run: |
-        mv odtp.yml "${component_name}_${component_version}.yml"
+        mv ${{ env.SOURCE_FILE }} "${component_name}_${component_version}.yml"
 
     - name: Checkout Forked Repository Components Branch
       uses: actions/checkout@v3
       with:
-        repository: ${{ github.repository_owner }}/odtp-zoo  # Use the full path directly
+        repository: ${{ env.FORKED_REPO }}
         token: ${{ secrets.GITHUB_TOKEN }}
-        ref: components  # Checking out the components branch of the fork
-        path: forked-repoW
+        ref: ${{ env.COMPONENTS_BRANCH }}  # Checking out the components branch of the fork
+        path: forked-repo
 
     - name: Set Upstream and Fetch Latest Changes from Original Repo
       run: |
         cd forked-repo
-        git remote add upstream https://github.com/odtp-org/odtp-zoo.git
-        git fetch upstream components
-        git merge upstream/components
+        git remote add upstream https://github.com/${{ env.UPSTREAM_REPO }}.git
+        git fetch upstream ${{ env.COMPONENTS_BRANCH }}
+        git merge upstream/${{ env.COMPONENTS_BRANCH }}
 
     - name: Copy Renamed File to Components Folder
       run: |
-        mkdir -p forked-repo/components
-        cp "${component_name}_${component_version}.yml" forked-repo/components/
+        mkdir -p forked-repo/${{ env.TARGET_FOLDER }}
+        cp "${component_name}_${component_version}.yml" forked-repo/${{ env.TARGET_FOLDER }}/
 
     - name: Commit and Push Changes to Fork
       run: |
         cd forked-repo
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add components/"${component_name}_${component_version}.yml"
+        git add ${{ env.TARGET_FOLDER }}/"${component_name}_${component_version}.yml"
         git commit -m "Add component file: ${component_name}_${component_version}.yml"
-        git push origin components
+        git push origin ${{ env.COMPONENTS_BRANCH }}
 
     - name: Create Pull Request to Upstream
       uses: peter-evans/create-pull-request@v5
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        repository: odtp-org/odtp-zoo
-        head: "${{ github.repository_owner }}:components"  # Format for fork's branch
-        base: components
+        repository: ${{ env.UPSTREAM_REPO }}
+        head: "${{ env.GITHUB_USERNAME }}:${{ env.COMPONENTS_BRANCH }}"  # Format for fork's branch
+        base: ${{ env.COMPONENTS_BRANCH }}
         title: "Add component file: ${component_name}_${component_version}.yml"
         body: "This PR adds the component file for ${component_name} version ${component_version}."
