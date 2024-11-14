@@ -65,7 +65,8 @@ jobs:
     - name: Copy Renamed File to Components Folder
       run: |
         mkdir -p forked-repo/${{ env.TARGET_FOLDER }}
-        cp "${component_name}_${component_version}.yml" forked-repo/${{ env.TARGET_FOLDER }}/
+        cp "${component_name}_${component_version}.yml" forked-repo/${{ env.TARGET_FOLDER }}/"${component_name}_${component_version}.yml"
+        ls -R forked-repo/${{ env.TARGET_FOLDER }}  # List all files 
 
     - name: Checkout Forked Repository Components Branch
       uses: actions/checkout@v3
