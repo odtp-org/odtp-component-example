@@ -41,7 +41,7 @@ jobs:
 
     - name: Rename File
       run: |
-        mv ${{ env.SOURCE_FILE }} "${component_name}_${component_version}.yml"
+        cp ${{ env.SOURCE_FILE }} "${component_name}_${component_version}.yml"
 
     - name: Checkout Forked Repository Components Branch
       uses: actions/checkout@v3
