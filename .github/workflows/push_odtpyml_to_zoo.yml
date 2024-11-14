@@ -42,7 +42,7 @@ jobs:
     - name: Checkout Forked Repository Components Branch
       uses: actions/checkout@v3
       with:
-        repository: ${{ github.repository_owner }}/{{ env.UPSTREAM_REPO_NAME }}
+        repository: ${{ github.repository_owner }}/odtp-zoo  # Use the full path directly
         token: ${{ secrets.GITHUB_TOKEN }}
         ref: components  # Checking out the components branch of the fork
         path: forked-repo
