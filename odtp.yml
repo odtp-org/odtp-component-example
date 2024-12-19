@@ -58,8 +58,6 @@ data-inputs: null
 
 # If applicable, data-output list produced by the component
 data-output:
-# If applicable, data-output list produced by the component
-data-output:
   - name: test.csv
     type: csv
     path: "{{HF_DATASET}}/test.csv"
